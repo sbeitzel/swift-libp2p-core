@@ -68,7 +68,7 @@ public final class SealedEnvelope: Envelope {
     /// Takes a marshalled / serialized Envelope object
     public init(marshaledEnvelope bytes: [UInt8], verifiedWithPublicKey pubKey: [UInt8]? = nil) throws {
         //print("Attempting to instantiate a SealedEnvelope from marshaled data")
-        let env = try EnvelopeMessage(serializedBytes: bytes)
+        let env = try EnvelopeMessage(serializedData: Data(bytes))
         //print("We have an Envelope, attempting to extract PublicKey")
         if let pub = pubKey {
             self.pubKey = try PeerID(marshaledPublicKey: Data(pub))
@@ -104,7 +104,7 @@ public final class SealedEnvelope: Envelope {
         //pub.type = .rsa
         //pub.data = try pubKey.marshal()
         //env.publicKey = pub
-        env.publicKey = try EnvelopeMessage.PublicKey(serializedBytes: pubKey.marshal())
+        env.publicKey = try EnvelopeMessage.PublicKey(serializedData: pubKey.marshal())
         //print("Envelope Marshalled PubKey:")
         //print(pub)
         env.payloadType = Data(self.payloadType)

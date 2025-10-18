@@ -35,7 +35,7 @@ public final class PeerRecord: Record {
     }
 
     public init(marshaledData: Data) throws {
-        let pr = try PeerRecordMessage(serializedBytes: marshaledData)
+        let pr = try PeerRecordMessage(serializedData: marshaledData)
         self.peerID = try PeerID(fromBytesID: [UInt8](pr.peerID))
         self.multiaddrs = try pr.addresses.map {
             try Multiaddr($0.multiaddr)
@@ -44,7 +44,7 @@ public final class PeerRecord: Record {
     }
 
     public init(marshaledData: Data, withPublicKey pubKey: Data) throws {
-        let pr = try PeerRecordMessage(serializedBytes: marshaledData)
+        let pr = try PeerRecordMessage(serializedData: marshaledData)
         let validatingPubKey = try PeerID(marshaledPublicKey: pubKey)
         let peerIDBytes = [UInt8](pr.peerID)
         guard peerIDBytes == validatingPubKey.id else {

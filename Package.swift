@@ -57,7 +57,9 @@ let package = Package(
                 .product(name: "PeerID", package: "swift-peer-id"),
                 .product(name: "Multiaddr", package: "swift-multiaddr"),
                 //.product(name: "SwiftProtobuf", package: "swift-protobuf"),
-            ]
+            ],
+            exclude: ["Protobufs/Envelope.proto",
+                      "Protobufs/PeerRecord.proto"]
         ),
         .testTarget(
             name: "LibP2PCoreTests",
