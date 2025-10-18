@@ -19,7 +19,7 @@ let package = Package(
     name: "swift-libp2p-core",
     platforms: [
         .macOS(.v10_15),
-        .iOS(.v13),
+        .iOS("18.0.0"), // TODO: use a constant like `.v18` when one exists -- SWB 2025-10-18
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
@@ -35,10 +35,10 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-nio.git", .upToNextMajor(from: "2.0.0")),
 
         // LibP2P Peer Identities
-        .package(url: "https://github.com/swift-libp2p/swift-peer-id.git", .upToNextMinor(from: "0.1.0")),
+        .package(url: "https://github.com/sbeitzel/swift-peer-id.git", .branch("feature/update_to_swift_6")),
 
         // LibP2P Multiaddr
-        .package(url: "https://github.com/swift-libp2p/swift-multiaddr.git", .upToNextMinor(from: "0.1.0")),
+        .package(url: "https://github.com/sbeitzel/swift-multiaddr.git", .branch("main")),
 
         // Logging
         .package(url: "https://github.com/apple/swift-log.git", .upToNextMajor(from: "1.0.0")),

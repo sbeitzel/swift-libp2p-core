@@ -61,13 +61,14 @@ public final class SealedEnvelope: Envelope {
 
         self.rawPayload = try record.marshal()
 
-        self.signature = try privKey.sign(message: Data(record.unsignedPayload())).bytes
+        let signed = try privKey.sign(message: Data(record.unsignedPayload()))
+        self.signature = [UInt8](signed)
     }
 
     /// Takes a marshalled / serialized Envelope object
     public init(marshaledEnvelope bytes: [UInt8], verifiedWithPublicKey pubKey: [UInt8]? = nil) throws {
         //print("Attempting to instantiate a SealedEnvelope from marshaled data")
-        let env = try EnvelopeMessage(contiguousBytes: bytes)
+        let env = try EnvelopeMessage(serializedBytes: bytes)
         //print("We have an Envelope, attempting to extract PublicKey")
         if let pub = pubKey {
             self.pubKey = try PeerID(marshaledPublicKey: Data(pub))
@@ -83,11 +84,11 @@ public final class SealedEnvelope: Envelope {
         }
 
         //print("We have a Public Key, proceeding with signature verification")
-        self.payloadType = env.payloadType.bytes
+        self.payloadType = [UInt8](env.payloadType)
 
-        self.rawPayload = env.payload.bytes
+        self.rawPayload = [UInt8](env.payload)
 
-        self.signature = env.signature.bytes
+        self.signature = [UInt8](env.signature)
 
         guard try verifySignature() else {
             throw Errors.invalidSignature
@@ -103,7 +104,7 @@ public final class SealedEnvelope: Envelope {
         //pub.type = .rsa
         //pub.data = try pubKey.marshal()
         //env.publicKey = pub
-        env.publicKey = try EnvelopeMessage.PublicKey(contiguousBytes: pubKey.marshal())
+        env.publicKey = try EnvelopeMessage.PublicKey(serializedBytes: pubKey.marshal())
         //print("Envelope Marshalled PubKey:")
         //print(pub)
         env.payloadType = Data(self.payloadType)
