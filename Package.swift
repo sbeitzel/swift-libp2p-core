@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:6.2
 //===----------------------------------------------------------------------===//
 //
 // This source file is part of the swift-libp2p open source project
@@ -19,7 +19,10 @@ let package = Package(
     name: "swift-libp2p-core",
     platforms: [
         .macOS(.v10_15),
-        .iOS("18.0.0"), // TODO: use a constant like `.v18` when one exists -- SWB 2025-10-18
+        .iOS(.v18),
+        .watchOS(.v26),
+        .tvOS(.v26),
+        .visionOS(.v26)
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
@@ -35,10 +38,10 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-nio.git", .upToNextMajor(from: "2.0.0")),
 
         // LibP2P Peer Identities
-        .package(url: "https://github.com/sbeitzel/swift-peer-id.git", .branch("feature/update_to_swift_6")),
+        .package(url: "https://github.com/sbeitzel/swift-peer-id.git", branch: "feature/update_for_swift_6_2"),
 
         // LibP2P Multiaddr
-        .package(url: "https://github.com/sbeitzel/swift-multiaddr.git", .branch("main")),
+        .package(url: "https://github.com/sbeitzel/swift-multiaddr.git", branch: "feature/update_for_swift_6_2"),
 
         // Logging
         .package(url: "https://github.com/apple/swift-log.git", .upToNextMajor(from: "1.0.0")),
@@ -58,8 +61,10 @@ let package = Package(
                 .product(name: "Multiaddr", package: "swift-multiaddr"),
                 //.product(name: "SwiftProtobuf", package: "swift-protobuf"),
             ],
-            exclude: ["Protobufs/Envelope.proto",
-                      "Protobufs/PeerRecord.proto"]
+            resources: [
+                .copy("Protobufs/Envelope.proto"),
+                .copy("Protobufs/PeerRecord.proto")
+            ]
         ),
         .testTarget(
             name: "LibP2PCoreTests",
